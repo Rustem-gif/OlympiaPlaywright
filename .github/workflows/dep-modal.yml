@@ -34,6 +34,8 @@ jobs:
         run: npx playwright install chromium
 
       - name: Run deposit modal tests
+        env:
+          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
         run: npm run test:dep-modal
 
       - name: Disconnect VPN

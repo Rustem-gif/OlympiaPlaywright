@@ -12,7 +12,11 @@
       "Bash(curl -sL --max-time 20 \"https://www.olympia3.casino/en-AU/\")",
       "Bash(npm install *)",
       "Bash(npm run *)",
-      "Bash(echo \"EXIT_CODE: $?\")"
+      "Bash(echo \"EXIT_CODE: $?\")",
+      "Bash(git config *)",
+      "Bash(gh auth *)",
+      "Read(//c/Users/User/Desktop/Automation/OlympiaPlaywright/src//**)",
+      "Read(//c/Users/User/Desktop/Automation/OlympiaPlaywright//**)"
     ]
   }
 }
