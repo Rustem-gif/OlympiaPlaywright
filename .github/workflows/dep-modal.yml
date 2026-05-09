@@ -48,7 +48,7 @@ jobs:
           if [ -d playwright-report ] && [ "$(ls -A playwright-report)" ]; then
             TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
             REMOTE_BASE="rustem@rustems-mac-mini.local:/Volumes/KINGSTON/team-playwright-reports"
-            BUILD_DIR="build-dep-modal-$TIMESTAMP"
+            BUILD_DIR="build-olympia-dep-modal-$TIMESTAMP"
 
             echo "Sending report to Mac mini..."
             rsync -avz playwright-report/ "$REMOTE_BASE/$BUILD_DIR/"
@@ -61,7 +61,7 @@ jobs:
             python3 scripts/extract-stats.py "$PWD/$BUILD_DIR" || echo "Stats extraction failed"
           fi
 
-          ls -t | grep "^build-dep-modal-" | tail -n +131 | xargs -r rm -rf
+          ls -t | grep "^build-olympia-dep-modal-" | tail -n +131 | xargs -r rm -rf
 
           echo "[" > reports.json
           ls -t | grep "^build-" | awk '{if(NR>1)print","; printf "{\"directory\":\"%s\"}",$0}' >> reports.json
@@ -78,6 +78,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-dep-modal-${{ github.run_id }}
+          name: playwright-report-olympia-dep-modal-${{ github.run_id }}
           path: playwright-report/
           retention-days: 7
