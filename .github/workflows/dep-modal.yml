@@ -1,0 +1,81 @@
+name: Olympia Deposit Modal Tests
+
+on:
+  schedule:
+    - cron: '0 3 * * *'   # daily 3 AM UTC
+    - cron: '0 14 * * *'  # daily 2 PM UTC
+
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: 'Deployment target'
+        required: true
+        type: choice
+        options:
+          - Run deposit modal tests
+
+jobs:
+  test:
+    runs-on: [self-hosted, Linux]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      - name: Run deposit modal tests
+        run: npm run test:dep-modal
+
+      - name: Disconnect VPN
+        if: always()
+        run: expressvpnctl disconnect || true
+
+      - name: Upload report to Mac mini
+        if: always()
+        run: |
+          if [ -d playwright-report ] && [ "$(ls -A playwright-report)" ]; then
+            TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+            REMOTE_BASE="rustem@rustems-mac-mini.local:/Volumes/KINGSTON/team-playwright-reports"
+            BUILD_DIR="build-dep-modal-$TIMESTAMP"
+
+            echo "Sending report to Mac mini..."
+            rsync -avz playwright-report/ "$REMOTE_BASE/$BUILD_DIR/"
+            echo "Report uploaded to Mac mini: $BUILD_DIR"
+
+            ssh rustem@rustems-mac-mini.local "BUILD_DIR=$BUILD_DIR bash -s" << 'EOF'
+          cd /Volumes/KINGSTON/team-playwright-reports
+
+          if [ -f scripts/extract-stats.py ]; then
+            python3 scripts/extract-stats.py "$PWD/$BUILD_DIR" || echo "Stats extraction failed"
+          fi
+
+          ls -t | grep "^build-dep-modal-" | tail -n +131 | xargs -r rm -rf
+
+          echo "[" > reports.json
+          ls -t | grep "^build-" | awk '{if(NR>1)print","; printf "{\"directory\":\"%s\"}",$0}' >> reports.json
+          echo "" >> reports.json
+          echo "]" >> reports.json
+
+          echo "Reports index updated"
+          EOF
+          else
+            echo "No playwright-report directory found, skipping upload."
+          fi
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-dep-modal-${{ github.run_id }}
+          path: playwright-report/
+          retention-days: 7

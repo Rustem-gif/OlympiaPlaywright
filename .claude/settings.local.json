@@ -9,7 +9,10 @@
       "Bash(curl -sL --max-time 15 \"https://www.olympia.casino/sitemap.xml\")",
       "Bash(curl -sL --max-time 15 \"https://www.olympia.casino/robots.txt\")",
       "Bash(curl -sL --max-time 20 \"https://www.olympia3.casino/sitemap.xml\")",
-      "Bash(curl -sL --max-time 20 \"https://www.olympia3.casino/en-AU/\")"
+      "Bash(curl -sL --max-time 20 \"https://www.olympia3.casino/en-AU/\")",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(echo \"EXIT_CODE: $?\")"
     ]
   }
 }
