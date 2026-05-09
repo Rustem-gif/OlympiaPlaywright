@@ -6,7 +6,7 @@
     "test": "playwright test",
     "test:smoke": "playwright test tests/Smoke",
     "test:regression": "playwright test tests/Regression",
-    "test:dep-modal": "playwright test --config=playwright.config.dep-modal.ts --headed",
+    "test:dep-modal": "playwright test --config=playwright.config.dep-modal.ts",
     "report": "playwright show-report"
   },
   "keywords": [],

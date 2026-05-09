@@ -2,8 +2,8 @@ name: Olympia Deposit Modal Tests
 
 on:
   schedule:
-    - cron: '0 3 * * *'   # daily 3 AM UTC
-    - cron: '0 14 * * *'  # daily 2 PM UTC
+    - cron: '0 3 * * *'  
+    - cron: '0 14 * * *'  
 
   workflow_dispatch:
     inputs:
