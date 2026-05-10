@@ -17,7 +17,7 @@ for (const locale of Object.keys(USERS_DEPOSIT_MODAL)) {
         vpnController = getVpnController();
         const vpnStatus = await vpnController.vpnCheckStatus();
 
-        if (vpnStatus.includes('connected')) {
+        if (/^connected/i.test(vpnStatus)) {
           await vpnController.vpnDisconnect();
         }
       });
