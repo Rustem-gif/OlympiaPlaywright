@@ -16,7 +16,12 @@
       "Bash(git config *)",
       "Bash(gh auth *)",
       "Read(//c/Users/User/Desktop/Automation/OlympiaPlaywright/src//**)",
-      "Read(//c/Users/User/Desktop/Automation/OlympiaPlaywright//**)"
+      "Read(//c/Users/User/Desktop/Automation/OlympiaPlaywright//**)",
+      "Bash(git -C /home/rustem-n100/Desktop/OlympiaPlaywright status)",
+      "Bash(git -C /home/rustem-n100/Desktop/OlympiaPlaywright diff)",
+      "Bash(git -C /home/rustem-n100/Desktop/OlympiaPlaywright add .github/workflows/dep-modal.yml playwright.config.dep-modal.ts tests/DepModal/depModalTest.spec.ts)",
+      "Bash(git -C /home/rustem-n100/Desktop/OlympiaPlaywright commit -m ' *)",
+      "Bash(git *)"
     ]
   }
 }
