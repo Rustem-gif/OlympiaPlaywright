@@ -16,17 +16,17 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html'],
-    // [
-    //   './node_modules/playwright-slack-report/dist/src/SlackReporter.js',
-    //   {
-    //     slackOAuthToken: process.env.SLACK_BOT_USER_OAUTH_TOKEN,
-    //     channels: ['test-reporter', 'gt1-payment-reports'],
-    //     sendResults: 'always',
-    //     layoutAsync: generateCustomLayoutAsync,
-    //     showInThread: true,
-    //     sendCustomBlocksInThreadAfterIndex: 3,
-    //   },
-    // ],
+    [
+      './node_modules/playwright-slack-report/dist/src/SlackReporter.js',
+      {
+        slackOAuthToken: process.env.SLACK_BOT_USER_OAUTH_TOKEN,
+        channels: ['test-reporter', 'gt1-payment-reports'],
+        sendResults: 'always',
+        layoutAsync: generateCustomLayoutAsync,
+        showInThread: true,
+        sendCustomBlocksInThreadAfterIndex: 3,
+      },
+    ],
   ],
 
   timeout: 120_000,
