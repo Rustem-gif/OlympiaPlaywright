@@ -39,4 +39,56 @@ export const USERS_DEPOSIT_MODAL: DepositModalUsers = {
       },
     },
   },
+  au: {
+    location: 'australia-brisbane',
+    user: {
+      dep0: {
+        email: 'ol0depau@gt1.com',
+        password: 'Olympia123!',
+      },
+      dep1: {
+        email: 'ol1depau@gt1.com',
+        password: 'Olympia123!',
+      },
+    },
+  },
+  ca: {
+    location: 'canada-montreal',
+    user: {
+      dep0: {
+        email: 'ol0depca@gt1.com',
+        password: 'Olympia123!',
+      },
+      dep1: {
+        email: 'ol1depca@gt1.com',
+        password: 'Olympia123!',
+      },
+    },
+  },
+  de: {
+    location: 'germany-frankfurt-1',
+    user: {
+      dep0: {
+        email: 'ol0depde@gt1.com',
+        password: 'Olympia123!',
+      },
+      dep1: {
+        email: 'ol1depde@gt1.com',
+        password: 'Olympia123!',
+      },
+    },
+  },
+  nz: {
+    location: 'New Zealand',
+    user: {
+      dep0: {
+        email: 'ol0depnz@gt1.com',
+        password: 'Olympia123!',
+      },
+      dep1: {
+        email: 'ol1depnz@gt1.com',
+        password: 'Olympia123!',
+      },
+    },
+  },
 };
