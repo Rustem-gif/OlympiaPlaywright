@@ -15,5 +15,6 @@ export default class SignInModal extends BaseComponent {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
     await this.submitButton.click();
+    await this.root.waitFor({ state: 'detached' });
   }
 }

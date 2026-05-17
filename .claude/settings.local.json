@@ -21,7 +21,8 @@
       "Bash(git -C /home/rustem-n100/Desktop/OlympiaPlaywright diff)",
       "Bash(git -C /home/rustem-n100/Desktop/OlympiaPlaywright add .github/workflows/dep-modal.yml playwright.config.dep-modal.ts tests/DepModal/depModalTest.spec.ts)",
       "Bash(git -C /home/rustem-n100/Desktop/OlympiaPlaywright commit -m ' *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(python3 -m json.tool)"
     ]
   }
 }

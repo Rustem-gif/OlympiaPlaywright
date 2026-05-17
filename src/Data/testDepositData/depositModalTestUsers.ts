@@ -14,9 +14,6 @@ type DepositModalUsers = {
   };
 };
 
-// Add new locales by extending this object.
-// Each locale needs a VPN location string (ExpressVPN location name)
-// and one or more user types (untrusted, trusted, affiliates, etc.)
 export const USERS_DEPOSIT_MODAL: DepositModalUsers = {
   ie: {
     location: 'Ireland',

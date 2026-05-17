@@ -25,11 +25,12 @@ for (const locale of Object.keys(USERS_DEPOSIT_MODAL)) {
       test.beforeEach(async ({ page }) => {
         olympia = new Olympia(page);
         await vpnController.vpnConnect(location);
-        await vpnController.sleepVPN(5000);
+        await vpnController.sleepVPN(10000);
       });
 
       test.afterEach(async () => {
         await vpnController.vpnDisconnect();
+        await vpnController.sleepVPN(1000);
       });
 
       test(`Visual comparison of dep modal ${locale} - ${type}`, async () => {
