@@ -33,7 +33,7 @@ export default defineConfig({
 
   use: {
     baseURL: 'https://www.olympia.casino',
-    trace: 'retain-on-failure',
+    trace: 'on',
     headless: true,
     screenshot: 'on',
     video: 'retain-on-failure',
