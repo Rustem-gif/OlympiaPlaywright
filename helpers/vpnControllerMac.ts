@@ -19,13 +19,10 @@ export class VpnControllerMac implements IVpnController {
           reject(error.message);
           return;
         }
-
+        // ExpressVPN CLI sometimes writes informational lines to stderr — treat as warnings only
         if (stderr) {
-          console.error(`Error: ${stderr}`);
-          reject(stderr);
-          return;
+          console.warn(`VPN CLI warning: ${stderr}`);
         }
-
         console.log(`Output: ${stdout}`);
         resolve(stdout);
       });
@@ -40,7 +37,20 @@ export class VpnControllerMac implements IVpnController {
     try {
       console.log(`Connecting to VPN location: ${location}`);
       await this.runVPN(`${EXPRESSVPN_CLI} connect "${location}"`);
-      console.log(`VPN connected successfully`);
+
+      // Poll until the connection is fully established or timeout
+      const connectTimeout = 30000;
+      const pollInterval = 2000;
+      const deadline = Date.now() + connectTimeout;
+      while (Date.now() < deadline) {
+        const status = await this.vpnCheckStatus();
+        if (status.toLowerCase().includes('connected')) {
+          console.log(`VPN connected successfully to ${location}`);
+          return;
+        }
+        await setTimeout(pollInterval);
+      }
+      throw new Error(`VPN connection to "${location}" timed out after ${connectTimeout}ms`);
     } catch (error) {
       console.error(`Failed to connect VPN: ${error}`);
       throw error;
