@@ -19,6 +19,10 @@ jobs:
 
     env:
       SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+      # Fallback auth for the AI failure-analysis step. Empty when the secret is unset —
+      # harmless, the runner's stored `claude` login is used instead. Set the secret only
+      # if CI failure analysis auth ever fails.
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
     steps:
       - name: Checkout code
@@ -50,6 +54,9 @@ jobs:
       - name: Install Playwright browsers
         if: steps.pw-cache.outputs.cache-hit != 'true'
         run: npx playwright install chromium
+
+      - name: Ensure Claude CLI on PATH
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Run deposit modal tests
         run: npm run test:dep-modal

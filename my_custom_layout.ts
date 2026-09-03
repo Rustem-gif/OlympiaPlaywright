@@ -2,6 +2,7 @@ import { Block, KnownBlock } from '@slack/types';
 import { SummaryResults } from 'playwright-slack-report/dist/src';
 import { WebClient } from '@slack/web-api';
 import { USERS_DEPOSIT_MODAL } from './src/Data/testDepositData/depositModalTestUsers';
+import generateAiTriageBlocks from './helpers/aiTriageSummary';
 import 'dotenv/config';
 
 export default async function generateCustomLayoutAsync(
@@ -37,6 +38,11 @@ export default async function generateCustomLayoutAsync(
     },
     block_id: 'summary-block',
   });
+
+  // Failure analysis: headless Claude Code root-causes the failures from test-results/
+  // screenshots and diffs. Sits directly under the summary. Best-effort — returns []
+  // on a green run and never throws.
+  blocks.push(...(await generateAiTriageBlocks(summaryResults)));
 
   blocks.push({ type: 'divider' });
 
