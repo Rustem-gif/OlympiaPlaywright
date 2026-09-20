@@ -23,8 +23,9 @@ export default defineConfig({
         channels: ['test-reporter', 'gt1-payment-reports'],
         sendResults: 'always',
         layoutAsync: generateCustomLayoutAsync,
+        maxNumberOfFailuresToShow: 0,
         showInThread: true,
-        sendCustomBlocksInThreadAfterIndex: 3,
+        sendCustomBlocksInThreadAfterIndex: 2, // Main message: header + summary only. Report link, all-tests, credentials, failure analysis all go in the thread.
       },
     ],
   ],

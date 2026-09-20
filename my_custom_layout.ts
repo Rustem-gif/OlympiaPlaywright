@@ -39,13 +39,6 @@ export default async function generateCustomLayoutAsync(
     block_id: 'summary-block',
   });
 
-  // Failure analysis: headless Claude Code root-causes the failures from test-results/
-  // screenshots and diffs. Sits directly under the summary. Best-effort — returns []
-  // on a green run and never throws.
-  blocks.push(...(await generateAiTriageBlocks(summaryResults)));
-
-  blocks.push({ type: 'divider' });
-
   blocks.push({
     type: 'section',
     text: {
@@ -55,15 +48,30 @@ export default async function generateCustomLayoutAsync(
     block_id: 'reports-archive-link',
   });
 
-  blocks.push({ type: 'divider' });
+  const formatTestLine = (t: (typeof summaryResults.tests)[0]): string => {
+    const icon =
+      t.status === 'failed' || t.status === 'timedOut'
+        ? '❌'
+        : t.status === 'skipped'
+          ? '⏩'
+          : '✅';
+    if ((t.status === 'failed' || t.status === 'timedOut') && t.reason) {
+      const reasonLines = t.reason
+        .split('\n')
+        .map(l => `  ${l}`)
+        .join('\n');
+      return `${icon} *${t.name}*\n${reasonLines}`;
+    }
+    return `${icon} ${t.name}`;
+  };
 
   blocks.push({
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: `*All Tests:*\n${summaryResults.tests
-        .map(t => `${t.status === 'failed' ? '❌' : t.status === 'skipped' ? '⏩' : '✅'} ${t.name}`)
-        .join('\n')}`,
+      // Slack hard-caps a text object at 3000 chars; many locales x user types
+      // plus failure reasons can blow past it and make the post fail.
+      text: `*All Tests:*\n${summaryResults.tests.map(formatTestLine).join('\n')}`.slice(0, 2800),
     },
     block_id: 'all-tests',
   });
@@ -99,5 +107,14 @@ export default async function generateCustomLayoutAsync(
     });
   }
 
+  // Failure analysis: headless Claude Code root-causes the failures from test-results/
+  // screenshots and diffs. Pushed last so it lands at the very end of the thread
+  // (blocks past sendCustomBlocksInThreadAfterIndex go into the thread reply).
+  // Best-effort — returns [] on a green run and never throws.
+  blocks.push(...(await generateAiTriageBlocks(summaryResults)));
+
+  if (!Array.isArray(blocks)) {
+    return [];
+  }
   return blocks;
 }
