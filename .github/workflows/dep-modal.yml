@@ -70,14 +70,31 @@ jobs:
         run: |
           if [ -d playwright-report ] && [ "$(ls -A playwright-report)" ]; then
             TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-            REMOTE_BASE="rustem@rustems-mac-mini.local:/Volumes/KINGSTON/team-playwright-reports"
+            MAC_HOST="${{ vars.MAC_MINI_HOST || '192.168.3.52' }}"
+            TARGET=""
+            for h in "$MAC_HOST" rustems-mac-mini.local; do
+              if ssh -n -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=5 "rustem@$h" true 2>/dev/null; then
+                TARGET="$h"; break
+              fi
+            done
+
+            if [ -z "$TARGET" ]; then
+              echo "::warning::Mac mini unreachable (tried $MAC_HOST and rustems-mac-mini.local) - report not archived"
+              exit 0
+            fi
+            echo "Using Mac mini at $TARGET"
+
+            REMOTE_BASE="rustem@$TARGET:/Volumes/KINGSTON/team-playwright-reports"
             BUILD_DIR="build-olympia-dep-modal-$TIMESTAMP"
 
             echo "Sending report to Mac mini..."
-            rsync -avz playwright-report/ "$REMOTE_BASE/$BUILD_DIR/"
+            rsync -avz playwright-report/ "$REMOTE_BASE/$BUILD_DIR/" || {
+              echo "::warning::rsync to $TARGET failed - report not archived"
+              exit 0
+            }
             echo "Report uploaded to Mac mini: $BUILD_DIR"
 
-            ssh rustem@rustems-mac-mini.local "BUILD_DIR=$BUILD_DIR bash -s" << 'EOF'
+            ssh "rustem@$TARGET" "BUILD_DIR=$BUILD_DIR bash -s" << 'EOF' || echo "::warning::post-upload indexing on $TARGET failed"
           cd /Volumes/KINGSTON/team-playwright-reports
 
           if [ -f scripts/extract-stats.py ]; then
