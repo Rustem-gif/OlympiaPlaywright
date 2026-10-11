@@ -2,7 +2,6 @@ import { Block, KnownBlock } from '@slack/types';
 import { SummaryResults } from 'playwright-slack-report/dist/src';
 import { WebClient } from '@slack/web-api';
 import { USERS_DEPOSIT_MODAL } from './src/Data/testDepositData/depositModalTestUsers';
-import generateAiTriageBlocks from './helpers/aiTriageSummary';
 import 'dotenv/config';
 
 export default async function generateCustomLayoutAsync(
@@ -106,12 +105,6 @@ export default async function generateCustomLayoutAsync(
       block_id: 'no-test-users',
     });
   }
-
-  // Failure analysis: headless Claude Code root-causes the failures from test-results/
-  // screenshots and diffs. Pushed last so it lands at the very end of the thread
-  // (blocks past sendCustomBlocksInThreadAfterIndex go into the thread reply).
-  // Best-effort — returns [] on a green run and never throws.
-  blocks.push(...(await generateAiTriageBlocks(summaryResults)));
 
   if (!Array.isArray(blocks)) {
     return [];
